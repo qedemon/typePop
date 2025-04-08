@@ -1,3 +1,1 @@
 # TypePop
-# TypePop
-# typePop
