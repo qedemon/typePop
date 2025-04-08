@@ -1,0 +1,22 @@
+#version 410 core
+layout (triangles) in;
+layout (triangle_strip, max_vertices=6) out;
+
+
+uniform vec3 eye;
+
+uniform mat4 m;
+uniform mat4 pv;
+uniform mat4 r;
+
+out vec3 posFromEye;
+out vec4 norm;
+void main(){
+    vec4 n=r*vec4(normalize(cross((gl_in[1].gl_Position-gl_in[0].gl_Position).xyz, (gl_in[2].gl_Position-gl_in[0].gl_Position).xyz)), 1);
+    for(int i=0; i<3; i++) {
+        gl_Position=pv*m*gl_in[i].gl_Position;
+        posFromEye=(m*gl_in[i].gl_Position).xyz-eye;
+        norm=n;
+        EmitVertex();
+    }
+}
