@@ -35,16 +35,29 @@ xcodebuild \
   -derivedDataPath "$DERIVED" \
   build
 
-# 3. 결과 .app 위치 안내 및 루트로 복사
+# 3. 결과 .app 을 루트로 복사
 APP="$DERIVED/Build/Products/$CONFIG/TypePop.app"
-if [ -d "$APP" ]; then
-  rm -rf "$ROOT/TypePop.app"
-  cp -R "$APP" "$ROOT/TypePop.app"
-  echo ""
-  echo "✅ 빌드 완료"
-  echo "   - $APP"
-  echo "   - $ROOT/TypePop.app (복사본)"
-else
+if [ ! -d "$APP" ]; then
   echo "error: .app 을 찾지 못했습니다: $APP" >&2
   exit 1
 fi
+rm -rf "$ROOT/TypePop.app"
+cp -R "$APP" "$ROOT/TypePop.app"
+
+# 4. Homebrew dylib(freetype/freeimage/libpng 등)을 .app 안에 임베드해서
+#    독립 실행형으로 만든다. (install_name 을 @executable_path 로 재작성)
+echo "==> 의존 라이브러리를 .app 에 임베드"
+dylibbundler -of -cd -b \
+  -x "$ROOT/TypePop.app/Contents/MacOS/TypePop" \
+  -d "$ROOT/TypePop.app/Contents/Frameworks" \
+  -p @executable_path/../Frameworks
+# install_name 변경으로 무효화된 서명을 다시 ad-hoc 서명
+codesign --force --deep -s - "$ROOT/TypePop.app"
+
+echo ""
+echo "✅ 빌드 완료 (독립 실행형)"
+echo "   - $ROOT/TypePop.app"
+echo "   외부 라이브러리 의존성:"
+otool -L "$ROOT/TypePop.app/Contents/MacOS/TypePop" | grep -qE "/opt/homebrew|/usr/local" \
+  && echo "   ⚠️  외부 의존성이 남아 있습니다" \
+  || echo "   → 없음 (Frameworks/ 에 모두 포함)"

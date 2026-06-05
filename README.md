@@ -30,6 +30,11 @@
 두 스크립트 모두 실행 시 `brew bundle` 로 의존성을 먼저 확인/설치합니다.
 `build.sh` 는 `.app` 번들을 만들고, `run.sh` 는 만든 `.app` 을 `open` 으로 실행합니다.
 
+`build.sh` 는 마지막에 `dylibbundler` 로 FreeType/FreeImage/libpng dylib 을
+`TypePop.app/Contents/Frameworks/` 안에 복사하고 링크 경로를 `@executable_path`
+기준으로 재작성합니다. 따라서 만들어진 `.app` 은 **Homebrew 가 없는 다른 Mac 으로
+복사해도 그대로 실행**되는 독립 실행형 번들입니다.
+
 ### 수동 빌드
 
 ```sh
