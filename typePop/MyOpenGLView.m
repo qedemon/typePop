@@ -94,6 +94,17 @@ static CVReturn DisplayLinkCallback( CVDisplayLinkRef displayLink, const CVTimeS
     }
 }
 
+// 최신 macOS 에서는 윈도우 contentView 가 자동으로 layer-backed 가 되어
+// lockFocus 가 호출되지 않는다. 그 경우 위의 lockFocus 에서 컨텍스트를 뷰에
+// 연결하지 못해 화면이 검게 나온다. layer-backed 여부와 무관하게 호출되는
+// viewDidMoveToWindow 에서 컨텍스트를 뷰에 연결한다.
+- (void) viewDidMoveToWindow{
+    [super viewDidMoveToWindow];
+    if(self.window!=nil && glContext!=nil && glContext.view!=self){
+        [glContext setView:self];
+    }
+}
+
 - (void) keyDown:(NSEvent *)theEvent{
     if([theEvent keyCode]==53){
         [self.window close];
