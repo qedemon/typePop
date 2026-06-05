@@ -1,0 +1,9 @@
+# macOS / Xcode
+.DS_Store
+build/
+DerivedData/
+TypePop.app/
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.moved-aside

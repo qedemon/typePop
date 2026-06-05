@@ -1,0 +1,20 @@
+// Dependencies.xcconfig
+//
+// Third-party dependencies (FreeType, FreeImage, GLM) are provided by Homebrew,
+// not vendored into this repo. Run `brew bundle` (see Brewfile) once to install them.
+//
+// Search paths cover both Homebrew prefixes so the project builds unchanged on
+// Apple Silicon (/opt/homebrew) and Intel (/usr/local). Non-existent paths are
+// ignored by the compiler/linker, so listing both is safe.
+
+// Homebrew 라이브러리는 현재 머신의 단일 아키텍처용이므로, 빌드도 현재
+// 아키텍처만 수행한다. (Release 의 기본 fat-binary 빌드는 다른 아키텍처에서
+// Homebrew dylib 링크 실패를 일으킨다.) 이렇게 두면 Intel/Apple Silicon
+// 양쪽에서 동일하게 빌드된다.
+ONLY_ACTIVE_ARCH = YES
+
+HEADER_SEARCH_PATHS = $(inherited) /opt/homebrew/include /opt/homebrew/include/freetype2 /usr/local/include /usr/local/include/freetype2 $(SRCROOT)
+
+LIBRARY_SEARCH_PATHS = $(inherited) /opt/homebrew/lib /usr/local/lib
+
+OTHER_LDFLAGS = $(inherited) -lfreetype -lfreeimage
