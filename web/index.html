@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TypePop — WebGL</title>
+  <meta name="description" content="키보드 입력에 반응하는 WebGL 타이포그래피 데모">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <canvas id="gl" tabindex="0"></canvas>
+
+  <div id="loader">
+    <div class="loader-inner">
+      <div class="logo">TypePop</div>
+      <div id="loader-text">시작하는 중…</div>
+      <div class="bar"><div id="loader-bar"></div></div>
+    </div>
+  </div>
+
+  <div id="error" class="hidden"></div>
+
+  <div id="hud" class="hidden">
+    <div class="row">
+      <span class="hint"><b>아무 키나</b> 눌러 보세요 · 누르고 있으면 계속 나옵니다</span>
+    </div>
+    <div class="row">
+      <button id="btn-font"><kbd>Enter</kbd> 폰트 전환 · <span id="font-label">Lucida Grande</span></button>
+      <button id="btn-hangul"><kbd>Tab</kbd> 자판 · <span id="hangul-label">영문</span></button>
+      <span id="stat" class="stat"></span>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
