@@ -77,6 +77,37 @@ ES 모듈과 `fetch` 를 쓰기 때문에 `file://` 로 직접 열면 동작하�
 전환하고, <kbd>Tab</kbd> 으로 두벌식 한글 자판을 켭니다
 (한글 폰트는 28MB 라 이때 처음 내려받습니다).
 
+### 배포
+
+```sh
+./scripts/deploy-web.sh
+```
+
+[web/](web/) 과 브라우저가 필요로 하는 폰트·환경 맵을 한 디렉터리로 묶어
+타임스탬프 릴리스로 올리고 심볼릭 링크를 돌립니다(교체가 원자적이라 무중단).
+`TARGET` / `SSH_KEY` 환경 변수로 대상 서버를 바꿀 수 있습니다.
+
+배포본에서는 `index.html` 의 `typepop-assets` 메타 태그를 자기 아래 `assets/` 로
+바꿔 씁니다. 저장소에서 그냥 열 때는 네이티브 버전이 쓰는 [typePop/](typePop/) 을
+그대로 가리키므로 파일이 중복되지 않습니다.
+
+서버 배치와 nginx 설정(최초 1회):
+
+```
+~/typepop-releases/<타임스탬프>/typePop/    실제 파일
+~/typepop-site -> ~/typepop-releases/<타임스탬프>
+```
+
+```nginx
+root /home/ubuntu/typepop-site;
+
+location = /typePop  { return 301 /typePop/; }
+location /typePop/   { index index.html; try_files $uri $uri/ =404; }
+```
+
+nginx 는 `www-data` 로 돌기 때문에 홈 디렉터리를 통과할 수 있어야 합니다
+(`chmod o+x /home/ubuntu`).
+
 ### 이식하면서 달라진 점
 
 | 원본 (OpenGL 4.1) | 웹 (WebGL2) |

@@ -10,7 +10,8 @@ import { Renderer } from './renderer.js';
 import { TypePopScene } from './scene.js';
 import { hangulFor } from './keymap.js';
 
-const ASSETS = '../typePop/';
+const ASSETS =
+  document.querySelector('meta[name="typepop-assets"]')?.content || '../typePop/';
 const ENV_MAP = ASSETS + 'ANGMAP11.jpg';
 const EN_FONT = ASSETS + 'LucidaGrande.ttc';
 const SYMBOL_FONT = ASSETS + 'Wingdings.ttf';
